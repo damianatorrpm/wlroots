@@ -753,6 +753,7 @@ static void read_surface_property(struct wlr_xwm *xwm,
 		read_surface_role(xwm, xsurface, reply);
 	} else if (property == xwm->atoms[NET_WM_USER_TIME]) {
 		wlr_log(WLR_DEBUG, "Handle NET_WM_USER_TIME");
+		wlr_signal_emit_safe(&xsurface->events.request_reload_configure, xsurface);		
 	} else {
 		char *prop_name = xwm_get_atom_name(xwm, property);
 		wlr_log(WLR_DEBUG, "unhandled X11 property %" PRIu32 " (%s) for window %" PRIu32,
