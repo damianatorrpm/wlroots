@@ -719,7 +719,7 @@ static void read_surface_net_wm_allowed_actions(struct wlr_xwm *xwm,
 {
 	wlr_log(WLR_DEBUG, "reading allowed actions");
 
-	xcb_atom_t *atom = xcb_get_property_value(reply);
+	// xcb_atom_t *atom = xcb_get_property_value(reply);
 	for (uint32_t i = 0; i < reply->value_len; i++)
 	{
 		// if (atom[i] == xwm->atoms[NET_WM_ACTION_MOVE])
