@@ -722,50 +722,50 @@ static void read_surface_net_wm_allowed_actions(struct wlr_xwm *xwm,
 	xcb_atom_t *atom = xcb_get_property_value(reply);
 	for (uint32_t i = 0; i < reply->value_len; i++)
 	{
-		if (atom[i] == xwm->atoms[NET_WM_ACTION_MOVE])
-		{
-			xsurface->can_move = true;
-		}
-		else if (atom[i] == xwm->atoms[NET_WM_ACTION_RESIZE])
-		{
-			xsurface->can_resize = true;
-		}
-		else if (atom[i] == xwm->atoms[NET_WM_ACTION_MINIMIZE])
-		{
-			xsurface->can_minimize = true;
-		}
-		else if (atom[i] == xwm->atoms[NET_WM_ACTION_SHADE])
-		{
-			xsurface->can_shade = true;
-		}
-		else if (atom[i] == xwm->atoms[NET_WM_ACTION_STICK])
-		{
-			xsurface->can_stick = true;
-		}
-		else if (atom[i] == xwm->atoms[NET_WM_ACTION_MAXIMIZE_HORZ])
-		{
-			xsurface->can_tile_horizontal = true;
-		}
-		else if (atom[i] == xwm->atoms[NET_WM_ACTION_MAXIMIZE_VERT])
-		{
-			xsurface->can_tile_vertical = true;
-		}
-		else if (atom[i] == xwm->atoms[NET_WM_ACTION_FULLSCREEN])
-		{
-			xsurface->can_fullscreen = true;
-		}
-		else if (atom[i] == xwm->atoms[NET_WM_ACTION_CHANGE_DESKTOP])
-		{
-			xsurface->can_change_workspace = true;
-		}
-		else if (atom[i] == xwm->atoms[NET_WM_ACTION_CLOSE])
-		{
-			xsurface->can_close = true;
-		}
-		else
-		{
-			wlr_log(WLR_DEBUG, "unhandled X11 allowed action");
-		}
+		// if (atom[i] == xwm->atoms[NET_WM_ACTION_MOVE])
+		// {
+		// 	xsurface->can_move = true;
+		// }
+		// else if (atom[i] == xwm->atoms[NET_WM_ACTION_RESIZE])
+		// {
+		// 	xsurface->can_resize = true;
+		// }
+		// else if (atom[i] == xwm->atoms[NET_WM_ACTION_MINIMIZE])
+		// {
+		// 	xsurface->can_minimize = true;
+		// }
+		// else if (atom[i] == xwm->atoms[NET_WM_ACTION_SHADE])
+		// {
+		// 	xsurface->can_shade = true;
+		// }
+		// else if (atom[i] == xwm->atoms[NET_WM_ACTION_STICK])
+		// {
+		// 	xsurface->can_stick = true;
+		// }
+		// else if (atom[i] == xwm->atoms[NET_WM_ACTION_MAXIMIZE_HORZ])
+		// {
+		// 	xsurface->can_tile_horizontal = true;
+		// }
+		// else if (atom[i] == xwm->atoms[NET_WM_ACTION_MAXIMIZE_VERT])
+		// {
+		// 	xsurface->can_tile_vertical = true;
+		// }
+		// else if (atom[i] == xwm->atoms[NET_WM_ACTION_FULLSCREEN])
+		// {
+		// 	xsurface->can_fullscreen = true;
+		// }
+		// else if (atom[i] == xwm->atoms[NET_WM_ACTION_CHANGE_DESKTOP])
+		// {
+		// 	xsurface->can_change_workspace = true;
+		// }
+		// else if (atom[i] == xwm->atoms[NET_WM_ACTION_CLOSE])
+		// {
+		// 	xsurface->can_close = true;
+		// }
+		// else
+		// {
+		// 	wlr_log(WLR_DEBUG, "unhandled X11 allowed action");
+		// }
 	}
 }
 

@@ -177,16 +177,16 @@ struct wlr_xwayland_surface {
 	bool has_alpha;
 
         // _NET_WM_ALLOWED_ACTIONS
-        bool can_move = false;
-        bool can_resize = false;
-        bool can_minimize = false;
-        bool can_shade = false;
-        bool can_stick = false;
-        bool can_tile_horizontal = false;
-        bool can_tile_vertical = false;
-        bool can_fullscreen = false;
-        bool can_change_workspace = false;
-        bool can_close = false;
+        // bool can_move = false;
+        // bool can_resize = false;
+        // bool can_minimize = false;
+        // bool can_shade = false;
+        // bool can_stick = false;
+        // bool can_tile_horizontal = false;
+        // bool can_tile_vertical = false;
+        // bool can_fullscreen = false;
+        // bool can_change_workspace = false;
+        // bool can_close = false;
 
         struct {
           struct wl_signal destroy;
