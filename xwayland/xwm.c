@@ -33,6 +33,7 @@ const char *atom_map[ATOM_LAST] = {
 	[NET_WM_NAME] = "_NET_WM_NAME",
 	[NET_WM_STATE] = "_NET_WM_STATE",
 	[NET_WM_WINDOW_TYPE] = "_NET_WM_WINDOW_TYPE",
+	[NET_WM_ALLOWED_ACTIONS] = "_NET_WM_ALLOWED_ACTIONS",
 	[WM_TAKE_FOCUS] = "WM_TAKE_FOCUS",
 	[WINDOW] = "WINDOW",
 	[NET_ACTIVE_WINDOW] = "_NET_ACTIVE_WINDOW",
@@ -66,6 +67,16 @@ const char *atom_map[ATOM_LAST] = {
 	[NET_WM_WINDOW_TYPE_MENU] = "_NET_WM_WINDOW_TYPE_MENU",
 	[NET_WM_WINDOW_TYPE_NOTIFICATION] = "_NET_WM_WINDOW_TYPE_NOTIFICATION",
 	[NET_WM_WINDOW_TYPE_SPLASH] = "_NET_WM_WINDOW_TYPE_SPLASH",
+	[NET_WM_ACTION_MOVE] = "_NET_WM_ACTION_MOVE",
+	[NET_WM_ACTION_RESIZE] = "_NET_WM_ACTION_RESIZE",
+	[NET_WM_ACTION_MINIMIZE] = "_NET_WM_ACTION_MINIMIZE",
+	[NET_WM_ACTION_SHADE] = "_NET_WM_ACTION_SHADE",
+	[NET_WM_ACTION_STICK] = "_NET_WM_ACTION_STICK",
+	[NET_WM_ACTION_MAXIMIZE_HORZ] = "_NET_WM_ACTION_MAXIMIZE_HORZ",
+	[NET_WM_ACTION_MAXIMIZE_VERT] = "_NET_WM_ACTION_MAXIMIZE_VERT",
+	[NET_WM_ACTION_FULLSCREEN] = "_NET_WM_ACTION_FULLSCREEN",
+	[NET_WM_ACTION_CHANGE_DESKTOP] = "_NET_WM_ACTION_CHANGE_DESKTOP",
+	[NET_WM_ACTION_CLOSE] = "_NET_WM_ACTION_CLOSE",
 	[DND_SELECTION] = "XdndSelection",
 	[DND_AWARE] = "XdndAware",
 	[DND_STATUS] = "XdndStatus",
@@ -702,6 +713,62 @@ static void read_surface_net_wm_state(struct wlr_xwm *xwm,
 	}
 }
 
+static void read_surface_net_wm_allowed_actions(struct wlr_xwm *xwm,
+												struct wlr_xwayland_surface *xsurface,
+												xcb_get_property_reply_t *reply)
+{
+	wlr_log(WLR_DEBUG, "reading allowed actions");
+
+	xcb_atom_t *atom = xcb_get_property_value(reply);
+	for (uint32_t i = 0; i < reply->value_len; i++)
+	{
+		if (atom[i] == xwm->atoms[NET_WM_ACTION_MOVE])
+		{
+			xsurface->can_move = true;
+		}
+		else if (atom[i] == xwm->atoms[NET_WM_ACTION_RESIZE])
+		{
+			xsurface->can_resize = true;
+		}
+		else if (atom[i] == xwm->atoms[NET_WM_ACTION_MINIMIZE])
+		{
+			xsurface->can_minimize = true;
+		}
+		else if (atom[i] == xwm->atoms[NET_WM_ACTION_SHADE])
+		{
+			xsurface->can_shade = true;
+		}
+		else if (atom[i] == xwm->atoms[NET_WM_ACTION_STICK])
+		{
+			xsurface->can_stick = true;
+		}
+		else if (atom[i] == xwm->atoms[NET_WM_ACTION_MAXIMIZE_HORZ])
+		{
+			xsurface->can_tile_horizontal = true;
+		}
+		else if (atom[i] == xwm->atoms[NET_WM_ACTION_MAXIMIZE_VERT])
+		{
+			xsurface->can_tile_vertical = true;
+		}
+		else if (atom[i] == xwm->atoms[NET_WM_ACTION_FULLSCREEN])
+		{
+			xsurface->can_fullscreen = true;
+		}
+		else if (atom[i] == xwm->atoms[NET_WM_ACTION_CHANGE_DESKTOP])
+		{
+			xsurface->can_change_workspace = true;
+		}
+		else if (atom[i] == xwm->atoms[NET_WM_ACTION_CLOSE])
+		{
+			xsurface->can_close = true;
+		}
+		else
+		{
+			wlr_log(WLR_DEBUG, "unhandled X11 allowed action");
+		}
+	}
+}
+
 char *xwm_get_atom_name(struct wlr_xwm *xwm, xcb_atom_t atom) {
 	xcb_get_atom_name_cookie_t name_cookie =
 		xcb_get_atom_name(xwm->xcb_conn, atom);
@@ -742,15 +809,29 @@ static void read_surface_property(struct wlr_xwm *xwm,
 		read_surface_protocols(xwm, xsurface, reply);
 	} else if (property == xwm->atoms[NET_WM_STATE]) {
 		read_surface_net_wm_state(xwm, xsurface, reply);
-	} else if (property == xwm->atoms[WM_HINTS]) {
+	}
+	else if (property == xwm->atoms[NET_WM_ALLOWED_ACTIONS])
+	{
+		read_surface_net_wm_allowed_actions(xwm, xsurface, reply);
+	}
+	else if (property == xwm->atoms[WM_HINTS])
+	{
 		read_surface_hints(xwm, xsurface, reply);
-	} else if (property == xwm->atoms[WM_NORMAL_HINTS]) {
+	}
+	else if (property == xwm->atoms[WM_NORMAL_HINTS])
+	{
 		read_surface_normal_hints(xwm, xsurface, reply);
-	} else if (property == xwm->atoms[MOTIF_WM_HINTS]) {
+	}
+	else if (property == xwm->atoms[MOTIF_WM_HINTS])
+	{
 		read_surface_motif_hints(xwm, xsurface, reply);
-	} else if (property == xwm->atoms[WM_WINDOW_ROLE]) {
+	}
+	else if (property == xwm->atoms[WM_WINDOW_ROLE])
+	{
 		read_surface_role(xwm, xsurface, reply);
-	} else {
+	}
+	else
+	{
 		char *prop_name = xwm_get_atom_name(xwm, property);
 		wlr_log(WLR_DEBUG, "unhandled X11 property %" PRIu32 " (%s) for window %" PRIu32,
 			property, prop_name ? prop_name : "(null)", xsurface->window_id);
@@ -825,6 +906,7 @@ static void xwm_map_shell_surface(struct wlr_xwm *xwm,
 		xwm->atoms[MOTIF_WM_HINTS],
 		xwm->atoms[NET_WM_STATE],
 		xwm->atoms[NET_WM_WINDOW_TYPE],
+		xwm->atoms[NET_WM_ALLOWED_ACTIONS],
 		xwm->atoms[NET_WM_NAME],
 		xwm->atoms[NET_WM_PID],
 	};

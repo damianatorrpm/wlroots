@@ -176,29 +176,41 @@ struct wlr_xwayland_surface {
 
 	bool has_alpha;
 
-	struct {
-		struct wl_signal destroy;
-		struct wl_signal request_configure;
-		struct wl_signal request_move;
-		struct wl_signal request_resize;
-		struct wl_signal request_minimize;
-		struct wl_signal request_maximize;
-		struct wl_signal request_fullscreen;
-		struct wl_signal request_activate;
+        // _NET_WM_ALLOWED_ACTIONS
+        bool can_move;
+        bool can_resize;
+        bool can_minimize;
+        bool can_shade;
+        bool can_stick;
+        bool can_tile_horizontal;
+        bool can_tile_vertical;
+        bool can_fullscreen;
+        bool can_change_workspace;
+        bool can_close;
 
-		struct wl_signal map;
-		struct wl_signal unmap;
-		struct wl_signal set_title;
-		struct wl_signal set_class;
-		struct wl_signal set_role;
-		struct wl_signal set_parent;
-		struct wl_signal set_pid;
-		struct wl_signal set_window_type;
-		struct wl_signal set_hints;
-		struct wl_signal set_decorations;
-		struct wl_signal set_override_redirect;
-		struct wl_signal set_geometry;
-		struct wl_signal ping_timeout;
+        struct {
+          struct wl_signal destroy;
+          struct wl_signal request_configure;
+          struct wl_signal request_move;
+          struct wl_signal request_resize;
+          struct wl_signal request_minimize;
+          struct wl_signal request_maximize;
+          struct wl_signal request_fullscreen;
+          struct wl_signal request_activate;
+
+          struct wl_signal map;
+          struct wl_signal unmap;
+          struct wl_signal set_title;
+          struct wl_signal set_class;
+          struct wl_signal set_role;
+          struct wl_signal set_parent;
+          struct wl_signal set_pid;
+          struct wl_signal set_window_type;
+          struct wl_signal set_hints;
+          struct wl_signal set_decorations;
+          struct wl_signal set_override_redirect;
+          struct wl_signal set_geometry;
+          struct wl_signal ping_timeout;
 	} events;
 
 	struct wl_listener surface_destroy;
